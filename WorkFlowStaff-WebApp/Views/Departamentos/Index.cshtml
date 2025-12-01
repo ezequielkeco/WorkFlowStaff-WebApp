@@ -1,0 +1,110 @@
+﻿@model IEnumerable<WorkFlowStaff_WebApp.Models.Departamento>
+
+@{
+    ViewData["Title"] = "Departamentos";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4 text-primary">Gestión de @ViewData["Title"]</h2>
+
+            <div class="d-flex justify-content-between mb-4">
+                <button type="button" class="btn btn-accent shadow-soft" onclick="openCreateModal()">
+                    <i class="bi bi-plus-circle me-2"></i> + Nuevo Departamento
+                </button>
+                <button type="button" class="btn btn-outline-secondary shadow-soft">
+                    <i class="bi bi-file-earmark-arrow-up me-2"></i> Exportar a SVG
+                </button>
+            </div>
+
+            <div class="card shadow-soft p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                                <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departamentosTableBody">
+                            @await Html.PartialAsync("_DepartamentosList", Model)
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalPlaceholder"></div>
+
+@section Scripts {
+    <script>
+        function openCreateModal(id) {
+            var url = id ? `/Departamentos/GetForm/${id}` : '/Departamentos/GetForm';
+            $.get(url, function (data) {
+                $('#modalPlaceholder').html(data);
+                var modal = new bootstrap.Modal(document.getElementById('createEditModal'));
+                modal.show();
+            });
+        }
+
+        function openDeleteModal(id) {
+            $.get(`/Departamentos/GetDeleteConfirmation/${id}`, function (data) {
+                $('#modalPlaceholder').html(data);
+                var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                modal.show();
+            });
+        }
+
+        $(document).on('submit', '#createEditForm', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        var modalEl = document.getElementById('createEditModal');
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        
+                        $('#modalPlaceholder').html(response);
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error al guardar el departamento.');
+                }
+            });
+        });
+
+        $(document).on('submit', '#deleteForm', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (response) {
+                    var modalEl = document.getElementById('deleteModal');
+                    var modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error al eliminar el departamento.');
+                }
+            });
+        });
+    </script>
+}
