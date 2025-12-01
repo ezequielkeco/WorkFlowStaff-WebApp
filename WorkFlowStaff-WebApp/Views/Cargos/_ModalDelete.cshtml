@@ -1,0 +1,40 @@
+﻿@model WorkFlowStaff_WebApp.Models.Cargo
+
+@{
+    bool canDelete = (bool)ViewData["CanDelete"];
+    int employeeCount = (int)ViewData["EmployeeCount"];
+}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content shadow-soft">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle-fill"></i> Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="deleteForm" asp-controller="Cargos" asp-action="Delete" method="post">
+                <div class="modal-body text-center">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    @if (canDelete)
+                    {
+                        <p>¿Está seguro de que desea eliminar el cargo **@Model.Nombre**?</p>
+                        <p class="text-muted small">Esta acción es irreversible.</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger fw-bold">No se puede eliminar este cargo.</p>
+                        <p>Tiene **@employeeCount** empleados asociados. Debe reasignarlos primero.</p>
+                    }
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    @if (canDelete)
+                    {
+                        <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
