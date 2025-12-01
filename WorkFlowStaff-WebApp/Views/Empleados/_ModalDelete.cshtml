@@ -1,0 +1,24 @@
+﻿@model WorkFlowStaff_WebApp.Models.Empleado
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content shadow-soft">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-exclamation-triangle-fill"></i> Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="deleteForm" asp-controller="Empleados" asp-action="Delete" method="post">
+                <div class="modal-body text-center">
+                    <input type="hidden" name="id" value="@Model.EmpleadoId" />
+
+                    <p>¿Está seguro de que desea eliminar al empleado **@Model.Nombre**?</p>
+                    <p class="text-muted small">Esta acción es irreversible.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
