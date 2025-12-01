@@ -44,11 +44,76 @@
     <script>
         function openCreateModal(id) {
             var url = id ? `/Empleados/GetForm/${id}` : '/Empleados/GetForm';
+
+            $.get(url, function (data) {
+                $('#modalPlaceholder').html(data);
+                var modal = new bootstrap.Modal(document.getElementById('createEditModal'));
+                modal.show();
+            });
         }
 
         function openDeleteModal(id) {
             var url = `/Empleados/GetDeleteConfirmation/${id}`;
+
+            $.get(url, function (data) {
+                $('#modalPlaceholder').html(data);
+                var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                modal.show();
+            });
         }
+
+        $(document).on('submit', '#createEditForm', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (response) {
+                    var modalEl = document.getElementById('createEditModal');
+                    var modal = bootstrap.Modal.getInstance(modalEl);
+
+                    if (response.success) {
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        // Si la validación falla en el servidor, reemplaza el contenido del modal
+                        $('#modalPlaceholder').html(response);
+                        // Y volvemos a mostrar el modal (Bootstrap lo hace automáticamente si el ID es el mismo)
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error al guardar el empleado.');
+                }
+            });
+        });
+
+        // -----------------------------------------------------------
+        // AÑADIDO: Manejador de Eliminación
+        // -----------------------------------------------------------
+        $(document).on('submit', '#deleteForm', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (response) {
+                    var modalEl = document.getElementById('deleteModal');
+                    var modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Error al eliminar el empleado.');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error de conexión al intentar eliminar.');
+                }
+            });
+        });
 
     </script>
 }
