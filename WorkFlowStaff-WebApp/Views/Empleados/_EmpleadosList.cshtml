@@ -1,0 +1,30 @@
+﻿@model IEnumerable<WorkFlowStaff_WebApp.Models.Empleado>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+        <td>@Html.DisplayFor(modelItem => item.Departamento.Nombre)</td>
+        <td>@Html.DisplayFor(modelItem => item.Cargo.Nombre)</td>
+        <td>@item.Salario.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"))</td> @* Formato de moneda RD $*@
+        <td>@Html.DisplayFor(modelItem => item.TiempoEnEmpresa)</td>
+        <td>
+            @if (item.EstadoVigente)
+            {
+                <span class="badge bg-success">Vigente</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">No Vigente</span>
+            }
+        </td>
+        <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="openCreateModal(@item.EmpleadoId)" title="Editar">
+                <i class="bi bi-pencil-square"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="openDeleteModal(@item.EmpleadoId)" title="Eliminar">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+}
