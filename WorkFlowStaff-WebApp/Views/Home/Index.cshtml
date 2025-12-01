@@ -1,8 +1,85 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <h2 class="mb-5 text-primary">Resumen Ejecutivo del Personal</h2>
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-soft p-4 text-center">
+                <p class="text-muted mb-1">Total de Empleados</p>
+                <h1 class="text-accent fw-bold display-4">@ViewData["TotalEmpleados"]</h1>
+                <p class="text-secondary small">Incluye activos e inactivos.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-soft p-4 text-center">
+                <p class="text-muted mb-1">Empleados Vigentes</p>
+                <h1 class="text-accent fw-bold display-4">@ViewData["EmpleadosVigentes"]</h1>
+                <p class="text-success small">Personal actualmente activo.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-soft p-4 text-center">
+                <p class="text-muted mb-1">Salario Promedio</p>
+                <h2 class="text-accent fw-bold display-4">@ViewData["SalarioPromedio"]</h2>
+                <p class="text-secondary small">Base salarial promedio vigente.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-soft p-4 text-center">
+                <p class="text-muted mb-1">Total de Departamentos</p>
+                <h1 class="text-accent fw-bold display-4">@ViewData["TotalDepartamentos"]</h1>
+                <p class="text-secondary small">Departamentos registrados.</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-5">
+
+        <div class="col-lg-6">
+            <div class="card shadow-soft p-4">
+                <h5 class="card-title text-primary mb-3">Top 5 Departamentos por Empleados</h5>
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in ViewData["EmpleadosPorDepto"] as List<dynamic>)
+                    {
+                        var total = (int)ViewData["EmpleadosVigentes"];
+                        var percentage = (item.Count * 100.0) / total;
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            @item.Departamento
+                            <div class="w-50">
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-accent" role="progressbar"
+                                         style="width: @(percentage)%;" aria-valuenow="@percentage"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        @item.Count (@percentage.ToString("0.0")%)
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-soft p-4">
+                <h5 class="card-title text-primary mb-3">Tendencias (Placeholder)</h5>
+                <p class="text-muted">Aquí se podrían mostrar gráficos más complejos sobre rotación o contratación usando librerías JS (ej. Chart.js).</p>
+                <div style="height: 200px; background-color: #f0f0f0; border-radius: 8px;">
+
+
+                    [Image of a minimalist orange and blue line graph]
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
