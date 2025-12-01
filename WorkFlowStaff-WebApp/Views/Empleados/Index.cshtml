@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WorkFlowStaff_WebApp.Models.Empleado>
+
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4 text-primary">Gestión de @ViewData["Title"]</h2>
+
+    <div class="d-flex justify-content-between mb-4">
+        <button type="button" class="btn btn-accent shadow-soft" onclick="openCreateModal()">
+            <i class="bi bi-plus-circle me-2"></i> + Nuevo Empleado
+        </button>
+        <button type="button" class="btn btn-outline-secondary shadow-soft">
+            <i class="bi bi-file-earmark-arrow-up me-2"></i> Exportar a SVG
+        </button>
+    </div>
+
+    <div class="card shadow-soft p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.Departamento)</th>
+                        <th>@Html.DisplayNameFor(model => model.Cargo)</th>
+                        <th>@Html.DisplayNameFor(model => model.Salario)</th>
+                        <th>@Html.DisplayNameFor(model => model.TiempoEnEmpresa)</th>
+                        <th>@Html.DisplayNameFor(model => model.EstadoVigente)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="empleadosTableBody">
+                    @await Html.PartialAsync("_EmpleadosList", Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modalPlaceholder"></div>
+
+@section Scripts {
+    <script>
+        function openCreateModal(id) {
+            var url = id ? `/Empleados/GetForm/${id}` : '/Empleados/GetForm';
+        }
+
+        function openDeleteModal(id) {
+            var url = `/Empleados/GetDeleteConfirmation/${id}`;
+        }
+
+    </script>
+}
