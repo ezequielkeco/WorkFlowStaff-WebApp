@@ -21,13 +21,17 @@ namespace WorkFlowStaff_WebApp.Controllers
             var empleadosVigentes = await _context.Empleados.CountAsync(e => e.EstadoVigente == true);
             var totalDepartamentos = await _context.Departamentos.CountAsync();
 
-            var salarioPromedioSeguro = await _context.Empleados
+            var salariosVigentes = await _context.Empleados
                 .Where(e => e.EstadoVigente == true)
-                .Select(e => (decimal?)e.Salario)
-                .DefaultIfEmpty(0)
-                .AverageAsync();
+                .Select(e => e.Salario)
+                .ToListAsync();
 
-            decimal salarioPromedio = salarioPromedioSeguro ?? 0;
+            decimal salarioPromedio = 0;
+
+            if (salariosVigentes.Any())
+            {
+                salarioPromedio = salariosVigentes.Average();
+            }
 
             var empleadosPorDepto = await _context.Empleados
                 .Where(e => e.EstadoVigente == true)

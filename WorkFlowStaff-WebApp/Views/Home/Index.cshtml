@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WorkFlowStaff_WebApp.Models
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
@@ -46,23 +48,34 @@
             <div class="card shadow-soft p-4">
                 <h5 class="card-title text-primary mb-3">Top 5 Departamentos por Empleados</h5>
                 <ul class="list-group list-group-flush">
-                    @foreach (var item in ViewData["EmpleadosPorDepto"] as List<dynamic>)
-                    {
+                    @{
+                        var empleadosPorDeptoList = ViewData["EmpleadosPorDepto"] as List<dynamic>;
                         var total = (int)ViewData["EmpleadosVigentes"];
-                        var percentage = (item.Count * 100.0) / total;
+                    }
 
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @item.Departamento
-                            <div class="w-50">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar bg-accent" role="progressbar"
-                                         style="width: @(percentage)%;" aria-valuenow="@percentage"
-                                         aria-valuemin="0" aria-valuemax="100">
-                                        @item.Count (@percentage.ToString("0.0")%)
+                    @if (empleadosPorDeptoList != null && empleadosPorDeptoList.Any() && total > 0)
+                    {
+                        @foreach (var item in empleadosPorDeptoList)
+                        {
+                            var percentage = (item.Count * 100.0) / total;
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @item.Departamento
+                                <div class="w-50">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-accent" role="progressbar"
+                                             style="width: @(percentage)%;" aria-valuenow="@percentage"
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            @item.Count (@percentage.ToString("0.0")%)
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item text-muted">No hay empleados vigentes para mostrar esta estadística.</li>
                     }
                 </ul>
             </div>
@@ -71,13 +84,12 @@
         <div class="col-lg-6">
             <div class="card shadow-soft p-4">
                 <h5 class="card-title text-primary mb-3">Tendencias (Placeholder)</h5>
-                <p class="text-muted">Aquí se podrían mostrar gráficos más complejos sobre rotación o contratación usando librerías JS (ej. Chart.js).</p>
-                <div style="height: 200px; background-color: #f0f0f0; border-radius: 8px;">
+                <p class="text-muted">Aquí se podrían mostrar gráficos más complejos sobre rotación o contratación.</p>
 
 
-                    [Image of a minimalist orange and blue line graph]
+                [Image of a minimalist orange and blue line graph]
 
-                </div>
+
             </div>
         </div>
 
