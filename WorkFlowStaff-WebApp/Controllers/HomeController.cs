@@ -1,32 +1,51 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WorkFlowStaff_WebApp.Models;
+using Microsoft.EntityFrameworkCore;
+using WorkFlowStaff_WebApp.Data;
 
 namespace WorkFlowStaff_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewData["Title"] = "Dashboard";
+
+            var totalEmpleados = await _context.Empleados.CountAsync();
+            var empleadosVigentes = await _context.Empleados.CountAsync(e => e.EstadoVigente == true);
+            var totalDepartamentos = await _context.Departamentos.CountAsync();
+
+            var salarioPromedio = await _context.Empleados
+                .Where(e => e.EstadoVigente == true)
+                .AverageAsync(e => e.Salario);
+
+            ViewData["TotalEmpleados"] = totalEmpleados;
+            ViewData["EmpleadosVigentes"] = empleadosVigentes;
+            ViewData["TotalDepartamentos"] = totalDepartamentos;
+            ViewData["SalarioPromedio"] = salarioPromedio.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"));
+
+            var empleadosPorDepto = await _context.Empleados
+                .Where(e => e.EstadoVigente == true)
+                .GroupBy(e => e.Departamento!.Nombre)
+                .Select(g => new { Departamento = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            ViewData["EmpleadosPorDepto"] = empleadosPorDepto;
+
             return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
