@@ -21,14 +21,13 @@ namespace WorkFlowStaff_WebApp.Controllers
             var empleadosVigentes = await _context.Empleados.CountAsync(e => e.EstadoVigente == true);
             var totalDepartamentos = await _context.Departamentos.CountAsync();
 
-            var salarioPromedio = await _context.Empleados
+            var salarioPromedioSeguro = await _context.Empleados
                 .Where(e => e.EstadoVigente == true)
-                .AverageAsync(e => e.Salario);
+                .Select(e => (decimal?)e.Salario)
+                .DefaultIfEmpty(0)
+                .AverageAsync();
 
-            ViewData["TotalEmpleados"] = totalEmpleados;
-            ViewData["EmpleadosVigentes"] = empleadosVigentes;
-            ViewData["TotalDepartamentos"] = totalDepartamentos;
-            ViewData["SalarioPromedio"] = salarioPromedio.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"));
+            decimal salarioPromedio = salarioPromedioSeguro ?? 0;
 
             var empleadosPorDepto = await _context.Empleados
                 .Where(e => e.EstadoVigente == true)
@@ -37,6 +36,12 @@ namespace WorkFlowStaff_WebApp.Controllers
                 .OrderByDescending(x => x.Count)
                 .Take(5)
                 .ToListAsync();
+
+            ViewData["TotalEmpleados"] = totalEmpleados;
+            ViewData["EmpleadosVigentes"] = empleadosVigentes;
+            ViewData["TotalDepartamentos"] = totalDepartamentos;
+
+            ViewData["SalarioPromedio"] = salarioPromedio.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"));
 
             ViewData["EmpleadosPorDepto"] = empleadosPorDepto;
 
