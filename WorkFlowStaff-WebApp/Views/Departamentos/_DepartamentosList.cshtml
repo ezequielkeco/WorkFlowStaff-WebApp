@@ -1,0 +1,17 @@
+﻿@model IEnumerable<WorkFlowStaff_WebApp.Models.Departamento>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+        <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+        <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="openCreateModal(@item.Id)" title="Editar">
+                <i class="bi bi-pencil-square"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="openDeleteModal(@item.Id)" title="Eliminar">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+}
