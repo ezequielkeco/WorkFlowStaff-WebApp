@@ -1,0 +1,39 @@
+﻿@model WorkFlowStaff_WebApp.Models.Cargo
+
+@{
+    var modalTitle = Model.Id == 0 ? "Crear Nuevo Cargo" : $"Editar: {Model.Nombre}";
+    var buttonText = Model.Id == 0 ? "Guardar Cargo" : "Guardar Cambios";
+}
+
+<div class="modal fade" id="createEditModal" tabindex="-1" aria-labelledby="createEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-soft">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createEditModalLabel">@modalTitle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="createEditForm" asp-controller="Cargos" asp-action="Save" method="post">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Responsabilidades" class="form-label"></label>
+                        <textarea asp-for="Responsabilidades" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Responsabilidades" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-accent">@buttonText</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
