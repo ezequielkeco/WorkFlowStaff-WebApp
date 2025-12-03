@@ -25,7 +25,7 @@ namespace WorkFlowStaff_WebApp.Models
         [Required(ErrorMessage = "La fecha de inicio es obligatoria.")]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha Inicio")]
-        public DateTime FechaInicio { get; set; }
+        public DateTime FechaInicio { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "El salario es obligatorio.")]
         [Column(TypeName = "decimal(18, 2)")]
