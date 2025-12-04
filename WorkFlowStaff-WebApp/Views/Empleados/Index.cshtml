@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-content-between mb-4">
         <button type="button" class="btn btn-accent shadow-soft" onclick="openCreateModal()">
-            <i class="bi bi-plus-circle me-2"></i> + Nuevo Empleado
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Empleado
         </button>
         <button type="button" class="btn btn-outline-secondary shadow-soft" id="exportSvgBtn">
             <i class="bi bi-file-earmark-arrow-up me-2"></i> Exportar a SVG
@@ -25,6 +25,7 @@
                         <th>@Html.DisplayNameFor(model => model.Departamento)</th>
                         <th>@Html.DisplayNameFor(model => model.Cargo)</th>
                         <th>@Html.DisplayNameFor(model => model.Salario)</th>
+                        <th>@Html.DisplayNameFor(model => model.NominaNeta)</th>
                         <th>@Html.DisplayNameFor(model => model.TiempoEnEmpresa)</th>
                         <th>@Html.DisplayNameFor(model => model.EstadoVigente)</th>
                         <th>Acciones</th>

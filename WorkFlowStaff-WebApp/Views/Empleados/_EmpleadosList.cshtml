@@ -7,6 +7,7 @@
         <td>@Html.DisplayFor(modelItem => item.Departamento.Nombre)</td>
         <td>@Html.DisplayFor(modelItem => item.Cargo.Nombre)</td>
         <td>@item.Salario.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"))</td> @* Formato de moneda RD $*@
+        <td>@item.NominaNeta.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-DO"))</td>
         <td>@Html.DisplayFor(modelItem => item.TiempoEnEmpresa)</td>
         <td>
             @if (item.EstadoVigente)
