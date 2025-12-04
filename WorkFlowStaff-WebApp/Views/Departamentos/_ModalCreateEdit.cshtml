@@ -38,3 +38,23 @@
         }
     </div>
 </div>
+
+<!---->
+@{
+    // ... Tu código C# Razor aquí ...
+}
+
+<div class="modal fade" id="createEditModal" tabindex="-1" aria-labelledby="createEditModalLabel" aria-hidden="true">
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // CRÍTICO: Re-parsear el formulario después de que el DOM del modal se ha cargado.
+    // Esto es necesario porque el formulario se inserta *después* de la carga inicial de la página.
+    $(document).ready(function () {
+        // Ejecuta la validación unobtrusive en el formulario insertado por AJAX
+        $.validator.unobtrusive.parse("#createEditForm");
+    });
+</script>

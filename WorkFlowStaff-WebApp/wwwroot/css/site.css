@@ -59,3 +59,17 @@ body {
     min-height: 100vh;
     background-color: #F8F9FA;
 }
+
+.col-table-ancho {
+    width: 25%;
+    min-width: 180px;
+    white-space: normal;
+}
+
+.form-select {
+    cursor: pointer !important;
+}
+
+.btn, .btn-accent {
+    cursor: pointer !important;
+}

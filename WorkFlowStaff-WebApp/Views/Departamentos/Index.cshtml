@@ -13,17 +13,17 @@
                 <button type="button" class="btn btn-accent shadow-soft" onclick="openCreateModal()">
                     <i class="bi bi-plus-circle me-2"></i> + Nuevo Departamento
                 </button>
-                <button type="button" class="btn btn-outline-secondary shadow-soft">
+                <button type="button" class="btn btn-outline-secondary shadow-soft" id="exportSvgBtn">
                     <i class="bi bi-file-earmark-arrow-up me-2"></i> Exportar a SVG
                 </button>
             </div>
 
             <div class="card shadow-soft p-4">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle" id="departamentosTable">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                                <th class="col-table-ancho">@Html.DisplayNameFor(model => model.Nombre)</th>
                                 <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
                                 <th>Acciones</th>
                             </tr>
@@ -106,5 +106,103 @@
                 }
             });
         });
+
+        --
+        document.getElementById('exportSvgBtn').addEventListener('click', function () {
+            exportTableToSVG('departamentosTable', 'tabla-exportada.svg');
+        });
+
+        function removeColumnByHeaderText(table, headerText) {
+            const ths = table.querySelectorAll("thead th");
+            let indexToRemove = -1;
+
+            ths.forEach((th, i) => {
+                if (th.innerText.trim().toLowerCase() === headerText.toLowerCase()) {
+                    indexToRemove = i;
+                }
+            });
+
+            if (indexToRemove === -1) return;
+
+            ths[indexToRemove].remove();
+
+            table.querySelectorAll("tbody tr").forEach(tr => {
+                const cells = tr.querySelectorAll("td, th");
+                if (cells[indexToRemove]) cells[indexToRemove].remove();
+            });
+        }
+
+        function exportTableToSVG(tableId, filename) {
+
+            const table = document.getElementById(tableId);
+            if (!table) return alert("No se encontró la tabla.");
+
+            const clone = table.cloneNode(true);
+
+            removeColumnByHeaderText(clone, "acciones");
+            removeColumnByHeaderText(table, "acciones");
+
+            inlineAllComputedStyles(table, clone);
+
+            location.reload();
+
+            const xhtmlNs = "http://www.w3.org/1999/xhtml";
+            const wrapper = document.createElementNS(xhtmlNs, "div");
+            wrapper.appendChild(clone);
+
+            const tmpDoc = document.implementation.createDocument(xhtmlNs, "html", null);
+            const imported = tmpDoc.importNode(wrapper, true);
+            tmpDoc.replaceChild(imported, tmpDoc.documentElement);
+
+            const serializer = new XMLSerializer();
+            const inner = serializer.serializeToString(imported);
+
+            const rect = table.getBoundingClientRect();
+            const width = Math.ceil(rect.width) || 800;
+            const height = Math.ceil(rect.height) || 600;
+
+            const svg =
+                `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                    <foreignObject width="100%" height="100%">
+                        ${inner}
+                    </foreignObject>
+                </svg>`;
+
+            const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                a.remove();
+            }, 100);
+        }
+
+        function inlineAllComputedStyles(sourceNode, targetNode) {
+
+            const sourceElements = sourceNode.getElementsByTagName('*');
+            const targetElements = targetNode.getElementsByTagName('*');
+
+            function copyComputedStyle(src, trg) {
+                const computed = window.getComputedStyle(src);
+                let styleStr = "";
+                for (let i = 0; i < computed.length; i++) {
+                    const prop = computed[i];
+                    styleStr += `${prop}:${computed.getPropertyValue(prop)};`;
+                }
+                trg.setAttribute('style', styleStr);
+            }
+
+            copyComputedStyle(sourceNode, targetNode);
+
+            for (let i = 0; i < sourceElements.length; i++) {
+                copyComputedStyle(sourceElements[i], targetElements[i]);
+            }
+        }
     </script>
 }
